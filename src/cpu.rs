@@ -1,5 +1,7 @@
 use std::{fs::{File}, error::Error, io::Read};
 
+use crate::opcodes::Opcode;
+
 #[derive(Debug)]
 struct RegPair {
     left: u8,
@@ -28,10 +30,10 @@ struct Registers {
 impl Registers {
     fn new() -> Self {
         Self { 
-            af: RegPair::new(0, 0), 
-            bc: RegPair::new(0, 0), 
-            de: RegPair::new(0, 0), 
-            hl: RegPair::new(0, 0),
+            af: RegPair::new(0x00, 0x00), 
+            bc: RegPair::new(0x00, 0x00), 
+            de: RegPair::new(0x00, 0x00), 
+            hl: RegPair::new(0x00, 0x00),
         }
     }
 }
@@ -41,22 +43,22 @@ pub struct Intel8080 {
     reg: Registers,
     pc: u16,
     sp: u16,
-    mem: [u8; 65536]
+    mem: [u8; 0xffff]
 }
 
 impl Intel8080 {
     pub fn new() -> Self {
         Self { 
             reg: Registers::new(), 
-            pc: 0x00, 
-            sp: 0x00, 
-            mem: [0; 65536]
+            pc: 0x0000, 
+            sp: 0xfffe, 
+            mem: [0; 0xffff]
         }
     }
 
     pub fn load_rom(&mut self, file_path: &str) -> Result<(), Box<dyn Error>>{
         let mut f = File::open(file_path)?;
-        f.read(&mut self.mem)?;
+        let _ = f.read(&mut self.mem)?;
         Ok(())
     }
 

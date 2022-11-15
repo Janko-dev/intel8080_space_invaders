@@ -4,6 +4,7 @@ use std::error::Error;
 use minifb::{Key, Window, WindowOptions};
 
 mod cpu;
+mod opcodes;
 
 const WIDTH: usize = 640;
 const HEIGHT: usize = 360;
@@ -37,11 +38,16 @@ impl Emulator {
     }
 
     pub fn run(&self){
-        print!("{:?}", self.cpu);
 
         while self.window.is_open() && !self.window.is_key_down(Key::Escape) {
             self.cpu.disassemble();    
         }
 
+    }
+}
+
+impl Default for Emulator {
+    fn default() -> Self {
+        Self::new()
     }
 }
